@@ -1,6 +1,9 @@
 namespace SpriteKind {
     export const PesticideCloud = SpriteKind.create()
     export const Building = SpriteKind.create()
+    export const Plant = SpriteKind.create()
+    export const Indicator = SpriteKind.create()
+    export const CompletedPlant = SpriteKind.create()
 }
 namespace myTiles {
     //% blockIdentity=images._tile
@@ -61,25 +64,6 @@ e e e e e e e e e e e e e e e e
 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
 `
     //% blockIdentity=images._tile
-    export const tile7 = img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . 5 . . . 5 . . . 5 . . . 5 . 
-. 5 e 5 . 5 e 5 . 5 e 5 . 5 e 5 
-. . 5 . . . 5 . . . 5 . . . 5 . 
-. . 7 . . . 7 . . . 7 . . . 7 . 
-`
-    //% blockIdentity=images._tile
     export const tile8 = img`
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
@@ -98,15 +82,42 @@ e e e e e e e e e e e e e e e e
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 `
+    //% blockIdentity=images._tile
+    export const tile9 = img`
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 2 5 5 5 5 5 5 5 
+5 5 5 2 2 2 5 5 5 2 2 2 5 5 5 5 
+5 5 5 2 5 5 5 5 5 2 2 2 2 5 5 5 
+5 5 5 2 5 5 5 5 5 2 2 5 2 5 5 5 
+5 5 5 2 2 2 5 5 5 2 2 2 2 5 5 5 
+5 5 5 2 5 5 5 5 5 2 5 2 2 5 5 5 
+5 5 5 2 5 5 5 5 5 2 5 2 2 5 5 5 
+5 5 5 2 5 5 5 5 5 2 2 2 2 2 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+`
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     updateFlightForHeading(-1)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Building, function (sprite, otherSprite) {
-    game.splash("CRASH!!")
-    sprite.destroy()
-    startPlayer()
+    crashPlane()
 })
+function crashPlane () {
+    mySprite.setFlag(SpriteFlag.Ghost, true)
+    mySprite.setVelocity(0, 0)
+    tilemap.destorySpritesOfKind(SpriteKind.Projectile)
+    tilemap.destorySpritesOfKind(SpriteKind.PesticideCloud)
+    // Improve this; there's a really weird bug here
+    game.splash("CRASH!!")
+    tilemap.destorySpritesOfKind(SpriteKind.Player)
+    startPlayer()
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
 . . . . . . . . . . . . . . . . 
@@ -157,6 +168,10 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     inverted = !(inverted)
     updateFlightForHeading(0)
 })
+sprites.onOverlap(SpriteKind.PesticideCloud, SpriteKind.Building, function (sprite, otherSprite) {
+    sprite.setFlag(SpriteFlag.Ghost, true)
+    info.changeScoreBy(-1)
+})
 function updateFlightForHeading (change: number) {
     if (!(inverted)) {
         heading = (heading + (planeImages.length + change)) % planeImages.length
@@ -177,9 +192,7 @@ scene.onHitWall(SpriteKind.Player, function (sprite) {
         heading = 9
         updateFlightForHeading(0)
     } else {
-        game.splash("CRASH!!")
-        sprite.destroy()
-        startPlayer()
+        crashPlane()
     }
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -189,6 +202,13 @@ sprites.onCreated(SpriteKind.Building, function (sprite) {
     if (tilemap.tileIs(tilemap.locationOfSprite(sprite), myTiles.tile8)) {
         sprite.setImage(houseImages[0])
     }
+})
+sprites.onOverlap(SpriteKind.PesticideCloud, SpriteKind.Plant, function (sprite, otherSprite) {
+    successIndicator = sprites.create(successfulDropImage, SpriteKind.Indicator)
+    successIndicator.setFlag(SpriteFlag.Ghost, true)
+    tiles.placeOnTile(successIndicator, tilemap.locationInDirection(tilemap.locationOfSprite(otherSprite), CollisionDirection.Top))
+    otherSprite.setKind(SpriteKind.CompletedPlant)
+    info.changeScoreBy(1)
 })
 sprites.onDestroyed(SpriteKind.Projectile, function (sprite) {
     cloud = sprites.create(img`
@@ -212,14 +232,22 @@ sprites.onDestroyed(SpriteKind.Projectile, function (sprite) {
     cloud.setPosition(sprite.x, sprite.y)
     cloud.lifespan = 300
 })
+sprites.onCreated(SpriteKind.Plant, function (sprite) {
+    if (tilemap.tileIs(tilemap.locationOfSprite(sprite), myTiles.tile9)) {
+        sprite.setImage(plantImages[0])
+    }
+})
 let cloud: Sprite = null
+let successIndicator: Sprite = null
 let inverted = false
 let heading = 0
-let mySprite: Sprite = null
 let projectile: Sprite = null
+let mySprite: Sprite = null
+let successfulDropImage: Image = null
 let partialRotation = 0
 let invertedPlaneImages: Image[] = []
 let planeImages: Image[] = []
+let plantImages: Image[] = []
 let houseImages: Image[] = []
 let baseSpeed = 0
 let airResistance = 0
@@ -244,6 +272,24 @@ houseImages = [img`
 . . . . d d d d d d d d d d d d d d d d d d d d d d d d . . . . 
 . . . . d d c c d d d d d d d d d d d d d d d d d d d d . . . . 
 . . . . d d c c d d d d d d d d d d d d d d d d d d d d . . . . 
+`]
+plantImages = [img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . 5 . . . . . . . 5 . . 
+. 5 . . 5 . 5 . . 5 . . 5 . 5 . 
+5 . 5 . . 5 . . 5 . 5 . . 5 . . 
+. 5 . . . 7 . . . 5 . . . 7 . . 
+. 7 . . . 7 . . . 7 . . . 7 . . 
+. 7 . . . 7 . . . 7 . . . 7 . . 
 `]
 planeImages = [img`
 . . . . . . . . . . . . . . . . 
@@ -658,8 +704,26 @@ f . . 2 2 . 2 . . . . . . . . .
 let fullRotation = 6.283
 partialRotation = fullRotation / planeImages.length
 scene.setBackgroundColor(9)
+successfulDropImage = img`
+1 1 1 1 1 1 1 1 1 1 6 6 1 1 1 1 
+1 1 1 1 1 1 1 1 1 6 6 1 6 1 1 1 
+1 1 1 1 1 1 1 1 6 6 1 1 1 1 1 1 
+1 1 6 6 1 1 1 6 6 1 1 1 1 1 1 1 
+1 1 1 6 6 1 6 6 1 1 1 1 1 1 1 1 
+1 1 1 1 6 6 6 1 1 1 1 1 1 1 1 1 
+1 1 1 1 1 6 1 1 1 1 1 1 1 1 1 1 
+1 6 6 6 6 6 6 6 6 6 6 6 6 6 6 1 
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`
 tilemap.loadMap(tilemap.createMap(tiles.createTilemap(
-            hex`2000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000400030300000000000000000000000000010101010101010101010101010101010102020101010101010101010101010101010101`,
+            hex`2000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000300040400000000000000000000000000010101010101010101010101010101010102020101010101010101010101010101010101`,
             img`
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -670,9 +734,11 @@ tilemap.loadMap(tilemap.createMap(tiles.createTilemap(
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 2 2 
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
 `,
-            [myTiles.tile0,myTiles.tile1,myTiles.tile5,myTiles.tile7,myTiles.tile8],
+            [myTiles.tile0,myTiles.tile1,myTiles.tile5,myTiles.tile8,myTiles.tile9],
             TileScale.Sixteen
         )))
 tilemap.createSpritesOnTiles(myTiles.tile8, SpriteKind.Building)
 tilemap.replaceAllTiles(myTiles.tile8, myTiles.tile0)
+tilemap.createSpritesOnTiles(myTiles.tile9, SpriteKind.Plant)
+tilemap.replaceAllTiles(myTiles.tile9, myTiles.tile0)
 startPlayer()
