@@ -2,7 +2,8 @@
     "name": "garden-crop-duster",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "tilemaps": "github:microsoft/pxt-tilemaps#v1.7.1"
     },
     "files": [
         "main.blocks",

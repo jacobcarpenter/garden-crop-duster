@@ -1,5 +1,6 @@
 namespace SpriteKind {
     export const PesticideCloud = SpriteKind.create()
+    export const Building = SpriteKind.create()
 }
 namespace myTiles {
     //% blockIdentity=images._tile
@@ -39,44 +40,6 @@ namespace myTiles {
 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
-`
-    //% blockIdentity=images._tile
-    export const tile2 = img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . c c c c c c c c c c c 
-. . . c c c c c c c c c c c c c 
-. c c c c c c c c c c c c c c c 
-. . . d d d d d d d d d d d d d 
-. . . d d d d d d d d d d d d d 
-. . . d d d d d d d d d d d d d 
-. . . d d d d d d c d d c d d c 
-. . . d d d d d d d d d d d d d 
-. . . d d c c d d d d d d d d d 
-. . . d d c c d d d d d d d d d 
-`
-    //% blockIdentity=images._tile
-    export const tile3 = img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-c c c c c c c c c . . . . . . . 
-c c c c c c c c c c c . . . . . 
-c c c c c c c c c c c c c . . . 
-d d d d d d d d d d d . . . . . 
-d d d d d d d d d d d . . . . . 
-d d d d d d d d d d d . . . . . 
-d d c d d c d d c d d . . . . . 
-d d d d d d d d d d d . . . . . 
-d d d d d d d d d d d . . . . . 
-d d d d d d d d d d d . . . . . 
 `
     //% blockIdentity=images._tile
     export const tile5 = img`
@@ -122,15 +85,15 @@ e e e e e e e e e e e e e e e e
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
-5 5 5 5 5 7 7 7 7 7 7 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
-5 5 5 5 5 7 5 5 5 5 7 5 5 5 5 5 
+5 5 5 5 5 5 5 7 5 5 5 5 5 5 5 5 
+5 5 7 5 5 7 5 5 7 7 7 5 5 5 5 5 
+5 5 7 5 5 7 5 5 7 7 5 7 5 5 5 5 
+5 5 7 5 5 7 5 5 7 7 7 7 5 5 5 5 
+5 5 7 7 7 7 5 5 7 5 7 7 5 5 5 5 
+5 5 7 5 5 7 5 5 7 5 7 7 5 5 5 5 
+5 5 7 5 5 7 5 5 5 7 7 7 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 7 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
@@ -138,6 +101,11 @@ e e e e e e e e e e e e e e e e
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     updateFlightForHeading(-1)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Building, function (sprite, otherSprite) {
+    game.splash("CRASH!!")
+    sprite.destroy()
+    startPlayer()
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
@@ -161,6 +129,30 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile.ay = gravity
     projectile.fx = airResistance
 })
+function startPlayer () {
+    heading = 0
+    inverted = false
+    mySprite = sprites.create(img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . 2 2 2 2 2 2 . . . . 
+. . 2 . . . . . . 2 8 . . . f . 
+. . 2 2 . . 2 2 2 2 2 2 2 . f . 
+. . 2 2 2 2 a a a a a a 2 . f . 
+. . . . . . . . . . 2 . . . f . 
+. . . . . . . . . . f . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, SpriteKind.Player)
+    scene.cameraFollowSprite(mySprite)
+    updateFlightForHeading(0)
+}
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     inverted = !(inverted)
     updateFlightForHeading(0)
@@ -179,8 +171,24 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     inverted = !(inverted)
     updateFlightForHeading(0)
 })
+scene.onHitWall(SpriteKind.Player, function (sprite) {
+    if (tilemap.locationXY(tilemap.locationOfSprite(mySprite), tilemap.XY.row) == 0 || !(tilemap.tileIs(tilemap.locationInDirection(tilemap.locationOfSprite(mySprite), CollisionDirection.Bottom), myTiles.tile1)) && (tilemap.locationXY(tilemap.locationOfSprite(mySprite), tilemap.XY.column) == 0 || tilemap.locationXY(tilemap.locationOfSprite(mySprite), tilemap.XY.column) == tilemap.tilemapColumns() - 1)) {
+        game.splash("STALL")
+        heading = 9
+        updateFlightForHeading(0)
+    } else {
+        game.splash("CRASH!!")
+        sprite.destroy()
+        startPlayer()
+    }
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     updateFlightForHeading(1)
+})
+sprites.onCreated(SpriteKind.Building, function (sprite) {
+    if (tilemap.tileIs(tilemap.locationOfSprite(sprite), myTiles.tile8)) {
+        sprite.setImage(houseImages[0])
+    }
 })
 sprites.onDestroyed(SpriteKind.Projectile, function (sprite) {
     cloud = sprites.create(img`
@@ -205,21 +213,38 @@ sprites.onDestroyed(SpriteKind.Projectile, function (sprite) {
     cloud.lifespan = 300
 })
 let cloud: Sprite = null
-let projectile: Sprite = null
+let inverted = false
+let heading = 0
 let mySprite: Sprite = null
+let projectile: Sprite = null
 let partialRotation = 0
 let invertedPlaneImages: Image[] = []
 let planeImages: Image[] = []
-let heading = 0
+let houseImages: Image[] = []
 let baseSpeed = 0
-let inverted = false
 let airResistance = 0
 let gravity = 0
 gravity = 30
 airResistance = 10
-inverted = false
 baseSpeed = 50
-heading = 0
+houseImages = [img`
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . c c c c c c c c c c c c c c c c c c c c . . . . . . 
+. . . . c c c c c c c c c c c c c c c c c c c c c c c c . . . . 
+. . c c c c c c c c c c c c c c c c c c c c c c c c c c c c . . 
+. . . . d d d d d d d d d d d d d d d d d d d d d d d d . . . . 
+. . . . d d d d d d d d d d d d d d d d d d d d d d d d . . . . 
+. . . . d d d d d d d d d d d d d d d d d d d d d d d d . . . . 
+. . . . d d d d d d c d d c d d c d d c d d c d d c d d . . . . 
+. . . . d d d d d d d d d d d d d d d d d d d d d d d d . . . . 
+. . . . d d c c d d d d d d d d d d d d d d d d d d d d . . . . 
+. . . . d d c c d d d d d d d d d d d d d d d d d d d d . . . . 
+`]
 planeImages = [img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
@@ -633,21 +658,21 @@ f . . 2 2 . 2 . . . . . . . . .
 let fullRotation = 6.283
 partialRotation = fullRotation / planeImages.length
 scene.setBackgroundColor(9)
-tiles.setTilemap(tiles.createTilemap(
-            hex`2000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020300050500000000000001010101010101010100000000000101010101010101010104040101010101010101010101010101010101010101`,
+tilemap.loadMap(tilemap.createMap(tiles.createTilemap(
+            hex`2000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000400030300000000000000000000000000010101010101010101010101010101010102020101010101010101010101010101010101`,
             img`
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . 2 2 . . . . . . . . . 2 2 2 2 2 2 2 2 2 . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 2 2 
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
 `,
-            [myTiles.tile0,myTiles.tile1,myTiles.tile2,myTiles.tile3,myTiles.tile5,myTiles.tile7,myTiles.tile8],
+            [myTiles.tile0,myTiles.tile1,myTiles.tile5,myTiles.tile7,myTiles.tile8],
             TileScale.Sixteen
-        ))
-mySprite = sprites.create(planeImages[heading], SpriteKind.Player)
-mySprite.vx = baseSpeed
-scene.cameraFollowSprite(mySprite)
+        )))
+tilemap.createSpritesOnTiles(myTiles.tile8, SpriteKind.Building)
+tilemap.replaceAllTiles(myTiles.tile8, myTiles.tile0)
+startPlayer()
