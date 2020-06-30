@@ -118,6 +118,10 @@ function crashPlane () {
     tilemap.destorySpritesOfKind(SpriteKind.Player)
     startPlayer()
 }
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Building, function (sprite, otherSprite) {
+    info.changeScoreBy(-1)
+    sprite.destroy()
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
 . . . . . . . . . . . . . . . . 
@@ -167,10 +171,6 @@ function startPlayer () {
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     inverted = !(inverted)
     updateFlightForHeading(0)
-})
-sprites.onOverlap(SpriteKind.PesticideCloud, SpriteKind.Building, function (sprite, otherSprite) {
-    sprite.setFlag(SpriteFlag.Ghost, true)
-    info.changeScoreBy(-1)
 })
 function updateFlightForHeading (change: number) {
     if (!(inverted)) {
