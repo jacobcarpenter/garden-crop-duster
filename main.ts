@@ -207,6 +207,12 @@ sprites.onOverlap(SpriteKind.PesticideCloud, SpriteKind.Plant, function (sprite,
     successIndicator = sprites.create(successfulDropImage, SpriteKind.Indicator)
     successIndicator.setFlag(SpriteFlag.Ghost, true)
     tiles.placeOnTile(successIndicator, tilemap.locationInDirection(tilemap.locationOfSprite(otherSprite), CollisionDirection.Top))
+    animation.runMovementAnimation(
+    successIndicator,
+    animation.animationPresets(animation.bobbing),
+    2000,
+    true
+    )
     otherSprite.setKind(SpriteKind.CompletedPlant)
     info.changeScoreBy(1)
 })
@@ -705,20 +711,20 @@ let fullRotation = 6.283
 partialRotation = fullRotation / planeImages.length
 scene.setBackgroundColor(9)
 successfulDropImage = img`
-1 1 1 1 1 1 1 1 1 1 6 6 1 1 1 1 
-1 1 1 1 1 1 1 1 1 6 6 1 6 1 1 1 
-1 1 1 1 1 1 1 1 6 6 1 1 1 1 1 1 
-1 1 6 6 1 1 1 6 6 1 1 1 1 1 1 1 
-1 1 1 6 6 1 6 6 1 1 1 1 1 1 1 1 
-1 1 1 1 6 6 6 1 1 1 1 1 1 1 1 1 
-1 1 1 1 1 6 1 1 1 1 1 1 1 1 1 1 
-1 6 6 6 6 6 6 6 6 6 6 6 6 6 6 1 
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
+. . . . . . . . . . 8 8 8 c . . 
+. . . . . . . . . 8 8 5 5 c . . 
+. . . . . . . . 8 8 5 5 5 c . . 
+. . . . . . . 8 8 5 5 5 c c . . 
+. 8 8 8 c . 8 8 5 5 5 c c . . . 
+. 8 5 5 c c 8 5 5 5 c c . . . . 
+. 8 5 5 5 c 5 5 5 c c . . . . . 
+. 8 8 5 5 5 5 5 c c . . . . . . 
+. . 8 8 5 5 5 c c . . . . . . . 
+. . . 8 8 5 c c . . . . . . . . 
+. . . . c c c . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 `
