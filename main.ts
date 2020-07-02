@@ -103,9 +103,66 @@ e e e e e e e e e e e e e e e e
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
 `
+    //% blockIdentity=images._tile
+    export const tile10 = img`
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 2 2 2 2 5 5 5 5 2 5 5 5 5 5 
+5 5 2 5 5 5 5 5 5 2 2 5 5 5 5 5 
+5 5 2 2 2 5 5 5 5 5 2 5 5 5 5 5 
+5 5 2 5 5 5 5 5 5 5 2 5 5 5 5 5 
+5 5 2 5 5 5 5 5 5 5 2 5 5 5 5 5 
+5 5 2 5 5 5 5 5 5 2 2 2 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+`
+    //% blockIdentity=images._tile
+    export const tile11 = img`
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 7 5 5 5 7 5 5 5 7 5 5 5 5 5 
+5 5 7 5 5 5 7 5 5 7 7 5 5 5 5 5 
+5 5 7 5 5 5 7 5 5 5 7 5 5 5 5 5 
+5 5 7 7 7 7 7 5 5 5 7 5 5 5 5 5 
+5 5 7 5 5 5 7 5 5 5 7 5 5 5 5 5 
+5 5 7 5 5 5 7 5 5 5 7 5 5 5 5 5 
+5 5 7 5 5 5 7 5 5 7 7 7 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+`
+    //% blockIdentity=images._tile
+    export const tile12 = img`
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 2 2 2 2 2 5 5 5 5 5 5 
+5 5 5 5 2 2 5 5 5 2 5 5 5 5 5 5 
+5 5 5 5 2 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 2 2 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 2 2 2 2 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 2 5 5 5 5 5 5 
+5 5 2 5 5 5 5 5 5 2 2 5 5 5 5 5 
+5 5 2 5 5 5 5 5 5 5 2 5 5 5 5 5 
+5 5 2 5 5 5 5 5 5 2 2 5 5 5 5 5 
+5 5 2 2 5 5 5 5 2 2 5 5 5 5 5 5 
+5 5 5 2 2 2 2 2 2 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+`
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (!(isStalled)) {
+    if (gameStarted && !(isStalled)) {
         updateFlightForHeading(-1)
     }
 })
@@ -185,6 +242,7 @@ function startPlayer () {
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 `, SpriteKind.Player)
+    tiles.placeOnTile(mySprite, startLocation)
     scene.cameraFollowSprite(mySprite)
     updateFlightForHeading(0)
 }
@@ -334,7 +392,7 @@ function startGame () {
     nextLevel()
 }
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (!(isStalled)) {
+    if (gameStarted && !(isStalled)) {
         inverted = !(inverted)
         updateFlightForHeading(0)
     }
@@ -350,19 +408,32 @@ function updateFlightForHeading (change: number) {
     mySprite.setVelocity(baseSpeed * Math.cos(heading * partialRotation), 0 - baseSpeed * Math.sin(heading * partialRotation))
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (!(isStalled)) {
+    if (gameStarted && !(isStalled)) {
         inverted = !(inverted)
         updateFlightForHeading(0)
     }
 })
 function nextLevel () {
     if (currentLevel < levels.length) {
+        tilemap.destorySpritesOfKind(SpriteKind.Player)
+        tilemap.destorySpritesOfKind(SpriteKind.CrashedPlayer)
+        tilemap.destorySpritesOfKind(SpriteKind.Projectile)
+        tilemap.destorySpritesOfKind(SpriteKind.PesticideCloud)
+        tilemap.destorySpritesOfKind(SpriteKind.Building)
+        tilemap.destorySpritesOfKind(SpriteKind.CompletedPlant)
+        tilemap.destorySpritesOfKind(SpriteKind.Indicator)
         tilemap.loadMap(levels[currentLevel])
         currentLevel += 1
-        tilemap.createSpritesOnTiles(myTiles.tile8, SpriteKind.Building)
-        tilemap.replaceAllTiles(myTiles.tile8, myTiles.tile0)
-        tilemap.createSpritesOnTiles(myTiles.tile9, SpriteKind.Plant)
-        tilemap.replaceAllTiles(myTiles.tile9, myTiles.tile0)
+        for (let value of houseTiles) {
+            tilemap.createSpritesOnTiles(value, SpriteKind.Building)
+            tilemap.replaceAllTiles(value, myTiles.tile0)
+        }
+        for (let value of plantTiles) {
+            tilemap.createSpritesOnTiles(value, SpriteKind.Plant)
+            tilemap.replaceAllTiles(value, myTiles.tile0)
+        }
+        startLocation = tiles.getTilesByType(myTiles.tile12)[0]
+        tilemap.replaceAllTiles(myTiles.tile12, myTiles.tile0)
         startPlayer()
     } else {
         game.over(true)
@@ -380,13 +451,15 @@ scene.onHitWall(SpriteKind.Player, function (sprite) {
     }
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (!(isStalled)) {
+    if (gameStarted && !(isStalled)) {
         updateFlightForHeading(1)
     }
 })
 sprites.onCreated(SpriteKind.Building, function (sprite) {
-    if (tilemap.tileIs(tilemap.locationOfSprite(sprite), myTiles.tile8)) {
-        sprite.setImage(houseImages[0])
+    for (let index = 0; index <= houseTiles.length - 1; index++) {
+        if (tilemap.tileIs(tilemap.locationOfSprite(sprite), houseTiles[index])) {
+            sprite.setImage(houseImages[index])
+        }
     }
 })
 sprites.onOverlap(SpriteKind.PesticideCloud, SpriteKind.Plant, function (sprite, otherSprite) {
@@ -430,8 +503,10 @@ sprites.onDestroyed(SpriteKind.Projectile, function (sprite) {
     cloud.lifespan = 300
 })
 sprites.onCreated(SpriteKind.Plant, function (sprite) {
-    if (tilemap.tileIs(tilemap.locationOfSprite(sprite), myTiles.tile9)) {
-        sprite.setImage(plantImages[0])
+    for (let index = 0; index <= plantTiles.length - 1; index++) {
+        if (tilemap.tileIs(tilemap.locationOfSprite(sprite), plantTiles[index])) {
+            sprite.setImage(plantImages[index])
+        }
     }
 })
 sprites.onDestroyed(SpriteKind.Timer, function (sprite) {
@@ -440,23 +515,26 @@ sprites.onDestroyed(SpriteKind.Timer, function (sprite) {
 let cloud: Sprite = null
 let successIndicator: Sprite = null
 let stallTimer: Sprite = null
+let startLocation: tiles.Location = null
 let inverted = false
 let heading = 0
 let projectile: Sprite = null
 let textSprite: TextSprite = null
 let bombCount = 0
-let gameStarted = false
 let buildingDamage = 0
 let crashed = false
 let crashedSprite: Sprite = null
 let mySprite: Sprite = null
 let isStalled = false
+let gameStarted = false
 let successfulDropImage: Image = null
 let partialRotation = 0
 let invertedPlaneImages: Image[] = []
 let planeImages: Image[] = []
 let plantImages: Image[] = []
+let plantTiles: Image[] = []
 let houseImages: Image[] = []
+let houseTiles: Image[] = []
 let levels: tilemap.WorldMap[] = []
 let currentLevel = 0
 let baseSpeed = 0
@@ -604,7 +682,7 @@ airResistance = 10
 baseSpeed = 50
 currentLevel = 0
 levels = [tilemap.createMap(tiles.createTilemap(
-            hex`1400080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000003000404000000000000000000010101010101010101020201010101010101010101010101`,
+            hex`1400080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000003000400040000000000000000010101010101010101020102010101010101010101010101`,
             img`
 . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . 
@@ -615,9 +693,26 @@ levels = [tilemap.createMap(tiles.createTilemap(
 . . . . . . . . . . . . . . . . 2 2 2 2 
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
 `,
-            [myTiles.tile0,myTiles.tile1,myTiles.tile5,myTiles.tile8,myTiles.tile9],
+            [myTiles.tile0,myTiles.tile1,myTiles.tile5,myTiles.tile8,myTiles.tile9,myTiles.tile10,myTiles.tile11,myTiles.tile12],
+            TileScale.Sixteen
+        )), tilemap.createMap(tiles.createTilemap(
+            hex`18000a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001010000000000070000000000000000000000000000000101010100000000000000000000000000050005000101010101010101000005000500000006000001020202010101010101010101010102020201010101010101010101010101010101`,
+            img`
+. . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . 2 
+2 . . . . . . . . . . . . . . . . . . . . . 2 2 
+2 2 . . . . . . . . . . . . . . . . . 2 2 2 2 2 
+2 2 2 . . . . . . . . . . . 2 2 2 2 2 2 2 2 2 2 
+2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
+`,
+            [myTiles.tile0,myTiles.tile1,myTiles.tile5,myTiles.tile8,myTiles.tile9,myTiles.tile10,myTiles.tile11,myTiles.tile12],
             TileScale.Sixteen
         ))]
+houseTiles = [myTiles.tile8, myTiles.tile11]
 houseImages = [img`
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -635,7 +730,82 @@ houseImages = [img`
 . . . . d d d d d d d d d d d d d d d d d d d d d d d d . . . . 
 . . . . d d c c d d d d d d d d d d d d d d d d d d d d . . . . 
 . . . . d d c c d d d d d d d d d d d d d d d d d d d d . . . . 
+`, img`
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . c c c c c c c c c c c c c c . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . c c c c c c c c c c c c c c c c c c . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . c c c c c c c c c c c c c c c c c c c c c c . . . . . . . . . . 
+. . . . . . . . . . . . . . . . c c c c c c c c c c c c c c c c c c c c c c . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . b b b b b b b b b b b b b b b b b b b b . . . . . . . . . . . 
+. . . . . c c c c c c c c c . . . b d d d d d d d d d d d d d d d d d d b . . . . . . . . . . . 
+. . . c c c c c c c c c c c c c . b d d d d d d d d d d d d d d d d d d b . . . . . . . . . . . 
+. c c c c c c c c c c c c c c c c b d c d d d c d d d b d d c d d d d c b . . . . . . . . . . . 
+. c c c c c c c c c c c c c c c c b d d d d d d d d d b d d d d d d d d b . . . . . . . . . . . 
+. . . b b b b b b b b b b b b b b b d d d d d d d d d b d d d d d d d d b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d d d d d d d d d b d d d d d d d d b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d c d d d c d d d b d d c d d d d c b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d d d d d d d d d b d d d d d d d d b . . . . . . . . . . . 
+. . . b d d c d d d d c d d d d b b d d d d d d d d b d d d d d d d d d b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d d d d d d d d d d d d d d d d d d b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d b b b b b b b b b b b b b b d d d b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d d d d d d d d d d d d d d d d d d b . . . . . . . . . . . 
+. . . b d d c d d d d c d d d d b b d d d d d d d d d d d d d d d d d d b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d d d b d d d d d d d d d b b b b b b . . . . . . . . . . . 
+. . . b d d d d d d d d d d d d b b d d b b d d d d d d d d d d d d d d b . . . . . . . . . . . 
+. . . b d d d d c c d d d d d d b b d d b d d d d d d d d d d d d d d d b . . . . . . . . . . . 
+. . . b b b b b c c b b b b b b b b b b b b b b b b b b b b b b b b b b b . . . . . . . . . . . 
+`, img`
+. . . . . . . . . . . . . . . . . . . . . . . . 
+. . . . . . . c c c c c c c c c . . . . . . . . 
+. . . . . c c d d d d d d d d d c c . . . . . . 
+. . . . c d d d d d d d d d d d d d c . . . . . 
+. . . c d d d d d d d d d d d d d d d c . . . . 
+. . c d d d d d d d d d d d d d d d d d c . . . 
+. c c d d d d d d d d d d d d d d d d d c c . . 
+. c b b d d d d d d d d d d d d d d d b b c . . 
+. c b b b b b d d d d d d d d b b b b b b c . . 
+. c d b b b b b b b b b b b b b b b b d d c . . 
+. c d d d d d b b b b b b b b d d d d d d c . . 
+. . c d d d d d d d d d d d d d d d d d c . . . 
+. . c d d d d d d d d d d d d d d d d d c . . . 
+. . . c c d d d d d d d d d d d d d c c . . . . 
+. . . . c c c d d d d d d d d d c c c . . . . . 
+. . . . c c c c c c c c c c c c c c c . . . . . 
+. . . . c c c c . . c c c . . c c c c . . . . . 
+. . . . c c c . c c c c c c c . c c c . . . . . 
+. . . . c c c . . . c c c . . . c c c . . . . . 
+. . . . c c c . . . c c c . . . c c c . . . . . 
+. . . . c c c . . . c c c . . . c c c . . . . . 
+. . . . c c c . . . c c c . . . c c c . . . . . 
+. . . . c c c c . . c c c . . c c c c . . . . . 
+. . . . c c c . c c c c c c c . c c c c . . . . 
+. . . . c c c . . . c c c . . . c c c c . . . . 
+. . . c c c c . . . c c c . . . . c c c . . . . 
+. . . c c c c . . . c c c . . . . c c c . . . . 
+. . . c c c . . . . c c c . . . . c c c . . . . 
+. . . c c c c c . . c c c . c c c c c c . . . . 
+. . . c c c . . c c c c c c . . . c c c . . . . 
+. . . c c c . . . . c c c . . . . c c c . . . . 
+. . . c c c . . . . c c c . . . . c c c c . . . 
+. . . c c c . . . . c c c . . . . c c c c . . . 
+. . . c c c . . . . c c c . . . . . c c c . . . 
+. . . c c c . . . . c c c . . . . . c c c . . . 
+. . . c c c . . . . c c c . . . . . c c c . . . 
+. . c c c c . . . . c c c . . . . . c c c . . . 
+. . c c c c . . . . c c c . . . . . c c c . . . 
+. . c c c . . . . . c c c . . . . . c c c c . . 
+. . c c c c c . . . c c c . c c c c c c c c . . 
+. . c c c . . c c c c c c c . . . . . c c c . . 
+. . c c c . . . . . c c c . . . . . . c c c . . 
+. . c c c . . . . . c c c . . . . . . c c c . . 
+. . c c c . . . . . c c c . . . . c c c c c . . 
+. . c c c c c c . . c c c c c c c . . c c c . . 
+. . c c c . . . c c c c c . . . . . . c c c . . 
+. c c c c . . . . . c c c . . . . . . c c c c . 
+. c c c c . . . . . c c c . . . . . . c c c c . 
 `]
+plantTiles = [myTiles.tile9, myTiles.tile10]
 plantImages = [img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
@@ -648,11 +818,28 @@ plantImages = [img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . 5 . . . . . . . 5 . . 
-. 5 . . 5 . 5 . . 5 . . 5 . 5 . 
-5 . 5 . . 5 . . 5 . 5 . . 5 . . 
+. 5 . . 5 e 5 . . 5 . . 5 e 5 . 
+5 e 5 . . 5 . . 5 e 5 . . 5 . . 
 . 5 . . . 7 . . . 5 . . . 7 . . 
 . 7 . . . 7 . . . 7 . . . 7 . . 
 . 7 . . . 7 . . . 7 . . . 7 . . 
+`, img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. 7 . . . 7 . . . . . 7 . . 7 . 
+. . 7 . 7 . 7 . . . . . 7 7 . 7 
+. . . 7 7 . . . 7 . . . . 7 . . 
+. d . 7 . . . . 7 7 . . . 7 . . 
+. 5 5 7 . . . . . 7 . . d 7 . . 
+. 7 5 7 . . d . . 7 5 5 . 7 . . 
+. 7 7 7 . 5 . . . 7 5 7 . 7 . d 
+. . . 7 5 5 . . . . 7 . . 7 5 . 
+. . . 7 5 7 . d . . 7 . . 7 5 7 
+. . . 7 7 . . . 5 . 7 . . 7 7 . 
+. . . 7 . . . 7 5 7 . . . 7 . . 
+. . . 7 . . . . 7 7 . . . 7 . . 
+. . . 7 . . . . . 7 . . . 7 . . 
+. . . 7 . . . . . 7 . . . 7 . . 
 `]
 planeImages = [img`
 . . . . . . . . . . . . . . . . 
