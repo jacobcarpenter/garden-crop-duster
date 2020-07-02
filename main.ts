@@ -109,6 +109,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Building, function (sprite, othe
     crashPlane()
 })
 function crashPlane () {
+    info.changeLifeBy(-1)
     mySprite.setFlag(SpriteFlag.Ghost, true)
     mySprite.setVelocity(0, 0)
     tilemap.destorySpritesOfKind(SpriteKind.Projectile)
@@ -119,11 +120,14 @@ function crashPlane () {
     startPlayer()
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Building, function (sprite, otherSprite) {
-    info.changeScoreBy(-1)
+    buildingDamage += 1
     sprite.destroy()
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    projectile = sprites.createProjectileFromSprite(img`
+    if (bombCount > 0) {
+        bombCount += -1
+        textSprite.setText(convertToText(bombCount))
+        projectile = sprites.createProjectileFromSprite(img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
@@ -141,10 +145,13 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 `, mySprite, mySprite.vx, mySprite.vy)
-    projectile.ay = gravity
-    projectile.fx = airResistance
+        projectile.ay = gravity
+        projectile.fx = airResistance
+    }
 })
 function startPlayer () {
+    bombCount = 10
+    textSprite.setText(convertToText(bombCount))
     heading = 0
     inverted = false
     mySprite = sprites.create(img`
@@ -214,7 +221,6 @@ sprites.onOverlap(SpriteKind.PesticideCloud, SpriteKind.Plant, function (sprite,
     true
     )
     otherSprite.setKind(SpriteKind.CompletedPlant)
-    info.changeScoreBy(1)
 })
 sprites.onDestroyed(SpriteKind.Projectile, function (sprite) {
     cloud = sprites.create(img`
@@ -248,6 +254,7 @@ let successIndicator: Sprite = null
 let inverted = false
 let heading = 0
 let projectile: Sprite = null
+let bombCount = 0
 let mySprite: Sprite = null
 let successfulDropImage: Image = null
 let partialRotation = 0
@@ -258,6 +265,24 @@ let houseImages: Image[] = []
 let baseSpeed = 0
 let airResistance = 0
 let gravity = 0
+let textSprite: TextSprite = null
+textSprite = textsprite.create("", 0, 1)
+textSprite.setMaxFontHeight(5)
+textSprite.setIcon(img`
+. . . . . . . . 
+. . . . . . . . 
+. . b c b . . . 
+. . c 7 c . . . 
+. . b c b . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+`)
+textSprite.setPosition(140, 6)
+textSprite.setFlag(SpriteFlag.Ghost, true)
+textSprite.setFlag(SpriteFlag.RelativeToCamera, true)
+info.setLife(3)
+let buildingDamage = 0
 gravity = 30
 airResistance = 10
 baseSpeed = 50
@@ -303,7 +328,7 @@ planeImages = [img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . . 2 2 2 2 2 2 . . . . 
-. . 2 . . . . . . 2 8 . . . f . 
+. . 2 . . . . . 2 . 8 . . . f . 
 . . 2 2 . . 2 2 2 2 2 2 2 . f . 
 . . 2 2 2 2 a a a a a a 2 . f . 
 . . . . . . . . . . 2 . . . f . 
@@ -410,7 +435,7 @@ f . . 2 2 . 2 . . . . . . . . .
 . f . . . 2 . . . . . . . . . . 
 . f . 2 a a a a a a 2 2 2 2 . . 
 . f . 2 2 2 2 2 2 2 . . 2 2 . . 
-. f . . . 8 2 . . . . . . 2 . . 
+. f . . . 8 . 2 . . . . . 2 . . 
 . . . . 2 2 2 2 2 2 . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
@@ -513,7 +538,7 @@ invertedPlaneImages = [img`
 . . . . . . . . . . 2 . . . f . 
 . . 2 2 2 2 a a a a a a 2 . f . 
 . . 2 2 . . 2 2 2 2 2 2 2 . f . 
-. . 2 . . . . . . 2 8 . . . f . 
+. . 2 . . . . . 2 . 8 . . . f . 
 . . . . . . 2 2 2 2 2 2 . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
@@ -610,7 +635,7 @@ invertedPlaneImages = [img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . 2 2 2 2 2 2 . . . . . . 
-. f . . . 8 2 . . . . . . 2 . . 
+. f . . . 8 . 2 . . . . . 2 . . 
 . f . 2 2 2 2 2 2 2 . . 2 2 . . 
 . f . 2 a a a a a a 2 2 2 2 . . 
 . f . . . 2 . . . . . . . . . . 
