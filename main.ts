@@ -485,6 +485,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function nextLevel () {
     if (currentLevel < levels.length) {
+        crashed = false
         tilemap.destorySpritesOfKind(SpriteKind.Player)
         tilemap.destorySpritesOfKind(SpriteKind.CrashedPlayer)
         tilemap.destorySpritesOfKind(SpriteKind.Projectile)
