@@ -19,5 +19,9 @@
     "supportedTargets": [
         "arcade"
     ],
+    "targetVersions": {
+        "target": "0.15.8",
+        "targetId": "arcade"
+    },
     "preferredEditor": "blocksprj"
 }
